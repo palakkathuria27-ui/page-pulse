@@ -4,31 +4,124 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Page Pulse</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
-    <link rel="stylesheet" href="style.css">
+        body {
+            background-color: #f4f7f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background: #ffffff;
+            padding: 30px 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            text-align: center;
+            max-width: 450px;
+            width: 100%;
+        }
+
+        h1 {
+            font-size: 24px;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #dcdfe6;
+            border-radius: 8px;
+            font-size: 15px;
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
+
+        input:focus {
+            border-color: #007bff;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: background-color 0.2s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #result {
+            margin-top: 20px;
+            text-align: left;
+            font-size: 14px;
+            color: #333;
+            word-break: break-word;
+        }
+    </style>
 </head>
 <body>
 
     <div class="container">
         <h1>Analyze Any Website in Seconds</h1>
-
-        <input
-            type="text"
-            id="url-input"
-            placeholder="Enter Website URL">
-
-        <br><br>
-
-        <button id="analyze-button">
-            Analyze Website
-        </button>
-
-        <br><br>
-
+        <div class="input-group">
+            <input type="text" id="url-input" placeholder="Enter Website URL (e.g., https://example.com)">
+            <button onclick="analyzeWebsite()">Analyze Website</button>
+        </div>
         <div id="result"></div>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        async function analyzeWebsite() {
+            const urlInput = document.getElementById('url-input').value;
+            const resultDiv = document.getElementById('result');
+
+            if (!urlInput) {
+                resultDiv.innerHTML = '<p style="color: red;">Please enter a valid URL!</p>';
+                return;
+            }
+
+            resultDiv.innerHTML = '<p style="color: #666;">Analyzing... Please wait.</p>';
+
+            try {
+                const response = await fetch('/api/analyze', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'json' },
+                    body: JSON.stringify({ url: urlInput })
+                });
+
+                const data = await response.json();
+                resultDiv.innerHTML = `<pre style="background:#f0f0f0; padding:10px; border-radius:5px;">${JSON.stringify(data, null, 2)}</pre>`;
+            } catch (error) {
+                resultDiv.innerHTML = '<p style="color: red;">Something went wrong!</p>';
+            }
+        }
+    </script>
 
 </body>
 </html>
