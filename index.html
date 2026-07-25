@@ -111,12 +111,12 @@
             try {
                 const response = await fetch('/api/analyze', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'json' },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ url: urlInput })
                 });
 
                 const data = await response.json();
-                resultDiv.innerHTML = `<pre style="background:#f0f0f0; padding:10px; border-radius:5px;">${JSON.stringify(data, null, 2)}</pre>`;
+                resultDiv.innerHTML = `<pre style="background:#f0f0f0; padding:10px; border-radius:5px; max-height: 200px; overflow-y: auto;">${JSON.stringify(data, null, 2)}</pre>`;
             } catch (error) {
                 resultDiv.innerHTML = '<p style="color: red;">Something went wrong!</p>';
             }
